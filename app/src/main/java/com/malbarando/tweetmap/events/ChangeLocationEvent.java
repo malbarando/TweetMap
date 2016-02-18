@@ -14,4 +14,6 @@ public class ChangeLocationEvent {
         this.northEast = northEast;
         this.southWest = southWest;
     }
+
+    public ChangeLocationEvent() {}
 }

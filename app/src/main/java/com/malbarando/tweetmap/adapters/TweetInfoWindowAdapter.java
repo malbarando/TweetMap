@@ -1,4 +1,4 @@
-package com.malbarando.tweetmap.module;
+package com.malbarando.tweetmap.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,7 +15,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
 import com.malbarando.tweetmap.R;
 import com.malbarando.tweetmap.objects.Tweet;
-import com.malbarando.tweetmap.utils.LogUtil;
 import com.malbarando.tweetmap.utils.RequestQueueSingleton;
 
 
@@ -51,7 +50,7 @@ public class TweetInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         Tweet tweet = gson.fromJson(jsDump, Tweet.class);
 
         TextView tvTitle = ((TextView) popup.findViewById(R.id.tw_name));
-        tvTitle.setText(tweet.screenName + ": " + tweet.messageText);
+        tvTitle.setText(tweet.profileName + ": " + tweet.messageText);
 
         // Retrieves an image specified by the URL, displays it in the UI.
         ImageRequest request = new ImageRequest(tweet.imageUrl,

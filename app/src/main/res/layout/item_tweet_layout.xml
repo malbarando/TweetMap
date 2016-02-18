@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="6dp">
+
+    <ImageView
+        android:id="@+id/itw_img"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/img_twitter"
+        android:layout_marginRight="10dp"
+        />
+    <TextView
+        android:id="@+id/itw_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/itw_img"
+        android:textStyle="bold"
+        android:paddingBottom="2dp"
+        android:layout_marginRight="4dp"
+        android:text="maica"/>
+    <TextView
+        android:id="@+id/itw_handler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/itw_name"
+        android:paddingBottom="2dp"
+        android:textColor="#aeafb0"
+        android:textSize="12sp"
+        android:layout_alignBaseline="@id/itw_name"
+        android:layout_toLeftOf="@+id/itw_time"
+        android:text="maica"/>
+
+    <TextView
+        android:id="@id/itw_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:layout_alignParentRight="true"
+        android:text="2 days ago"/>
+    <TextView
+        android:id="@+id/itw_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is a message \n dsafasdfsdff \n sdfsd \n sdfsdf"
+        android:layout_below="@+id/itw_name"
+        android:layout_toRightOf="@+id/itw_img"
+        android:layout_toEndOf="@+id/itw_img"
+        android:ellipsize="end"
+        android:scrollHorizontally="true"
+        android:maxLines="3"/>
+
+
+</RelativeLayout>

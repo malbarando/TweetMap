@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">TweetMap</string>
     <string name="google_api_key">AIzaSyBJUGsyn3A5YPgYAWTgocdQIl8ktO7nuVQ</string>
+    <string name="error_title">Connection error</string>
+    <string name="error_message">Please check your network connection and try again.</string>
+    <string name="retry">Retry</string>
 </resources>

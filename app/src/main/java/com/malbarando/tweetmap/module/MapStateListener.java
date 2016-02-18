@@ -9,7 +9,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by Maica Albarando on 2/18/2016.
+ * MapStateListener can be used to receive callbacks from GoogleMap
+ * on Android, when the map settles or unsettles, is touched or released.
+ *
+ * src: https://github.com/madsbf/MapStateListener
  */
 
 public abstract class MapStateListener {

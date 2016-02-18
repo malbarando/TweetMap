@@ -15,19 +15,22 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.malbarando.tweetmap.R;
+import com.malbarando.tweetmap.events.ChangeLocationEvent;
 import com.malbarando.tweetmap.module.TouchableMapFragment;
 import com.malbarando.tweetmap.module.TouchableWrapper;
-import com.malbarando.tweetmap.module.TweetInfoWindowAdapter;
+import com.malbarando.tweetmap.adapters.TweetInfoWindowAdapter;
 import com.malbarando.tweetmap.objects.Tweet;
 import com.malbarando.tweetmap.utils.Constants;
-import com.malbarando.tweetmap.utils.LogUtil;
+
+import de.greenrobot.event.EventBus;
 
 
 /**
  * Created by Maica Albarando on 2/17/2016.
  */
 public class MapFragment extends TouchableMapFragment implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,
+        GoogleMap.OnCameraChangeListener {
 
     private GoogleApiClient mGoogleApiClient;
     private Location mCurrentLocation;
@@ -44,13 +47,8 @@ public class MapFragment extends TouchableMapFragment implements GoogleApiClient
                 .addApi(LocationServices.API)
                 .build();
         getMap().setInfoWindowAdapter(new TweetInfoWindowAdapter(getActivity(), getActivity().getLayoutInflater()));
-
-        initListeners();
     }
 
-    private void initListeners() {
-//        getMap().setOnCameraChangeListener(this);
-    }
 
     @Override
     public void setTouchListener(TouchableWrapper.OnTouchListener onTouchListener) {
@@ -82,11 +80,11 @@ public class MapFragment extends TouchableMapFragment implements GoogleApiClient
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
-        }
+    }
 
-        @Override
+    @Override
     public void onStop() {
-            super.onStop();
+        super.onStop();
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
@@ -95,9 +93,9 @@ public class MapFragment extends TouchableMapFragment implements GoogleApiClient
     @Override
     public void onConnected(Bundle bundle) {
         mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        mCurrentLocation = new Location("");
-        mCurrentLocation.setLatitude(14.5833);
-        mCurrentLocation.setLongitude(120.984222);
+        if (mCurrentLocation == null) {
+            setDefaultLocation();
+        }
         initMapCamera(mCurrentLocation);
     }
 
@@ -111,21 +109,28 @@ public class MapFragment extends TouchableMapFragment implements GoogleApiClient
         getMap().animateCamera(CameraUpdateFactory.newCameraPosition(position), null);
         getMap().setMapType(MAP_TYPE);
         getMap().setMyLocationEnabled(true);
+        EventBus.getDefault().post(new ChangeLocationEvent());
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         // Set default location to Manila
-        mCurrentLocation = new Location("");
-        mCurrentLocation.setLatitude(37.422535);
-        mCurrentLocation.setLongitude(-122.084804);
+        setDefaultLocation();
         initMapCamera(mCurrentLocation);
     }
 
+    public void setDefaultLocation() {
+        mCurrentLocation = new Location("");
+        mCurrentLocation.setLatitude(37.422535);
+        mCurrentLocation.setLongitude(-122.084804);
+    }
 
+
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+    }
 }
