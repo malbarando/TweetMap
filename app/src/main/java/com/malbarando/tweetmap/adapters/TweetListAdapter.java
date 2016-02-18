@@ -1,6 +1,7 @@
 package com.malbarando.tweetmap.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +9,22 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.Volley;
 import com.malbarando.tweetmap.R;
 import com.malbarando.tweetmap.objects.Tweet;
+import com.malbarando.tweetmap.utils.RequestQueueSingleton;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -21,10 +35,21 @@ public class TweetListAdapter extends BaseAdapter {
     private final Context mContext;
     private List<Tweet> mData;
     private ViewHolder viewHolder;
+    private DisplayImageOptions options;
+
+    private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
 
     public TweetListAdapter(Context mContext, List<Tweet> mData) {
         this.mContext = mContext;
         this.mData = mData;
+        options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.spinner_48_inner_holo)
+                .showImageForEmptyUri(R.drawable.img_twitter)
+                .showImageOnFail(R.drawable.img_twitter)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .build();
     }
 
     @Override
@@ -65,6 +90,9 @@ public class TweetListAdapter extends BaseAdapter {
             viewHolder.tvMessage.setText(item.messageText);
             viewHolder.tvTimeStamp.setText(item.getRelativeTime(item.timeStamp));
             viewHolder.tvHandler.setText(item.getHandler());
+            viewHolder.imgProfile.setImageResource(R.drawable.img_twitter);
+
+            ImageLoader.getInstance().displayImage(item.imageUrl, viewHolder.imgProfile, options, animateFirstListener);
         }
 
         return view;
@@ -78,4 +106,22 @@ public class TweetListAdapter extends BaseAdapter {
         TextView tvTimeStamp;
         ImageView imgProfile;
     }
+    private static class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
+
+        static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
+
+        @Override
+        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+            if (loadedImage != null) {
+                ImageView imageView = (ImageView) view;
+                boolean firstDisplay = !displayedImages.contains(imageUri);
+                if (firstDisplay) {
+                    FadeInBitmapDisplayer.animate(imageView, 500);
+                    displayedImages.add(imageUri);
+                }
+            }
+        }
+    }
+
+
 }

@@ -21,6 +21,8 @@ import com.malbarando.tweetmap.objects.LatLong;
 import com.malbarando.tweetmap.objects.Tweet;
 import com.malbarando.tweetmap.utils.Constants;
 import com.malbarando.tweetmap.utils.LogUtil;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import org.json.JSONObject;
 
@@ -31,7 +33,6 @@ import io.socket.IOAcknowledge;
 import io.socket.IOCallback;
 import io.socket.SocketIO;
 import io.socket.SocketIOException;
-
 
 
 public class MainActivity extends BaseEventActivity {
@@ -52,6 +53,11 @@ public class MainActivity extends BaseEventActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mHelper = new TweetMapRequestHelper(this);
+        // Create global configuration and initialize ImageLoader with this config
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+        .build();
+        ImageLoader.getInstance().init(config);
+
         soConnect();
         TouchableMapFragment touchableMapFragment = (TouchableMapFragment) getFragmentManager().findFragmentById(R.id.map);
         map = touchableMapFragment.getMap();
@@ -65,6 +71,8 @@ public class MainActivity extends BaseEventActivity {
             public void onMapReleased() {
                 // Map released
                 changeLoc();
+                LogUtil.w("onMapReleased");
+
             }
 
             @Override
@@ -75,25 +83,28 @@ public class MainActivity extends BaseEventActivity {
             @Override
             public void onMapSettled() {
                 // Map settled
-                changeLoc();
+                LogUtil.w("onMapSettled");
+//                changeLoc();
             }
         };
 
     }
 
     private void changeLoc() {
-        if (map==null) return;
+        if (map == null) return;
         LatLngBounds bounds = map.getProjection().getVisibleRegion().latLngBounds;
         mHelper.changeLocation(new LatLong(bounds.southwest.latitude, bounds.southwest.longitude),
                 new LatLong(bounds.northeast.latitude, bounds.northeast.longitude));
-        if (socket == null || !socket.isConnected()) {
+
+
+        if (!socket.isConnected()) {
             launchReconnectDialog();
         }
     }
 
     private void clearList() {
         EventBus.getDefault().post(new ClearListEvent());
-        if(map!=null) {
+        if (map != null) {
             map.clear();
         }
     }

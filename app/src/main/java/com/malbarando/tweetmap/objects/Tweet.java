@@ -40,6 +40,7 @@ public class Tweet {
     public static String getRelativeTime(String timeStamp) {
         return  DateUtils.getRelativeTimeSpanString(new Date().getTime(), new Date(timeStamp).getTime(),
                 DateUtils.SECOND_IN_MILLIS,
-                DateUtils.FORMAT_NO_NOON).toString();
+                DateUtils.FORMAT_NO_NOON).toString()
+                .replace("in ", "");
     }
 }

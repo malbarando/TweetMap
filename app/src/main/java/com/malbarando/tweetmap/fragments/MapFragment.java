@@ -109,7 +109,6 @@ public class MapFragment extends TouchableMapFragment implements GoogleApiClient
         getMap().animateCamera(CameraUpdateFactory.newCameraPosition(position), null);
         getMap().setMapType(MAP_TYPE);
         getMap().setMyLocationEnabled(true);
-        EventBus.getDefault().post(new ChangeLocationEvent());
     }
 
     @Override
